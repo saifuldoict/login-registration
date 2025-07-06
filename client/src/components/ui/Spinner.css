@@ -1,0 +1,15 @@
+.ui_spinner{
+    width: 1em;
+    height: 1rem;
+    border: 5px solid ; 
+    border-radius: 50%;
+    border-color: #ccc;
+    border-right-color: white;
+    animation: loading 1s infinite linear;
+}
+
+@keyframes loading {
+    to{
+        transform: rotate(1turn);
+    }
+}

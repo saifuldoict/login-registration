@@ -1,0 +1,14 @@
+// import { create } from 'zustand'
+// import axios from 'axios'
+
+// const useStore = create((set) => ({
+//     User: null,
+//     UserList: async () => {
+//         let response = await axios.get('http://localhost:5100/api/user/register')
+//         if(response.data['status']==='success'){
+//             set({ UserList: response.data['data'] })
+//         }
+//     }
+// }))
+
+// export default useStore;

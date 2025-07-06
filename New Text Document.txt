@@ -1,0 +1,58 @@
+UserRegistartion:
+
+import bcrypt from 'bcrypt';
+প্রথমে রেজিস্টার মডেল তৈরি করতে হবে।
+২। ইউজার রেজিস্টার কন্ট্রোলার তৈরি করতে হবে
+ 
+কন্টোলার র কোড হবে:
+
+name, email, password = req.body;
+থেকে আনতে হবে
+তার পার 
+try {
+নাম ,ইমেই এইদুটো কে LowerCase convert করতে হবে। করে নতুন ভেরিয়েবল এর ভিতরে রাখতে হবে।
+
+এরপর 
+const findUser = মডেল থেকে await UsersModel.findOne({email: formateEmail});
+এর পর ইফ দিয়ে চেক করে দেখতে হবে এই ইউজার অলরেডি আছে কিনা
+
+if (findUser) {
+            const error = new Error("User already exists");
+            error.statusCode = 400; 
+            throw error;
+            }
+যদি না থাকে তবে
+
+ইউজার যে পাসওয়ার্ড দেবে সেটাকে const hashedPassword = await bcrypt.hash(password,10); হ্যাশড করে নিতে হবে। এবং জন্য এবার উপরে এটাকে  import bcrypt from 'bcrypt'; করতে হবে।
+
+এবার নতুন ইউজার তৈরি করতে হবে। এবং ইমেল, নাম, পাসওয়াড এর ভিতরে lowercase এ যে ভেরিয়েবল এ নাম ইমেল রাখা হয়েছিল সেটা দিতে হবে। এবং পাসওয়ার্ড এ hashedPassword দিতে হবে।
+const newUser = new UsersModel({
+            name: formateName,
+            email: formateEmail,
+            password: hashedPassword
+        })
+         await newUser.save();
+        res.json({status: "success", message: "User registered successfully"});
+
+}catch(error){
+console.log(error.message || "Internal Server Error");
+        res.json({status:'false', message: error.message || "Internal Server Error"});
+}
+
+
+ইউজার তৈরি হয়ে গেলে - ইউজার যে পাসওয়ার্ড দেবে সেটা যেন খালি না হয় এবং পাসওয়া কমপক্ষে ৬ এবং সর্বোচ ১২ ডিজিট হয় সেজন্য import Joi from "joi"; কে  import করতে হবে। বং
+const validateUser = (data) => {
+    const schema = Joi.object({
+        name: Joi.string().required(),
+        email: Joi.string().email().required(),
+        password: Joi.string().min(6).max(12).required()
+    });
+    return schema.validate(data);
+}
+  পরে try ar পরে  const {error: validationError} = validateUser(req.body)
+try ar পরে
+if (validationError) {
+            const error = new Error(validationError.details[0].message);
+            error.statusCode = 400; // Bad Request
+            throw error;
+        }
