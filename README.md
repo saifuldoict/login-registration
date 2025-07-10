@@ -1,0 +1,11 @@
+PORT=5100
+MONGO_URI="mongodb+srv://saiful:crud@cluster0.qmlxwt8.mongodb.net"
+
+ACCESS_TOKEN_KEY="dadfadfdgadgdf"
+
+EMAIL="saifulnhk@gmail.com"
+EMAIL_PASSWORD="saiful123"
+EMAIL_HOST="smtp.gmail.com"
+EMAIL_PORT=587
+EMAIL_SECURE=false
+EMAIL_FROM="
