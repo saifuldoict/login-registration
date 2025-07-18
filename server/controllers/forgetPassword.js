@@ -1,5 +1,6 @@
 import UsersModel from "../model/UsersModel.js";
 import crypto from "crypto";
+import sendMail from "../utils/sendMail.js";
 
 const forgetPassword = async (req, res) => {
     const { email } = req.body;
@@ -27,6 +28,7 @@ const forgetPassword = async (req, res) => {
         findUser.otp.token = token;
 
         await findUser.save();
+        sendMail(otp,formatEmail);
         res.json({status:"success", message: "OTP sent successfully", token: token})
 
 

@@ -5,7 +5,8 @@ import BackToLogin from '../ui/BackToLogin';
 import { TbLockPassword } from "react-icons/tb";
 import Timer from './Timer';
 import { useNavigate } from 'react-router-dom';
-
+import toast from 'react-hot-toast';
+import api from '../utils/api';
 const VerifyOtp = () => {
     const navigate = useNavigate()
     const ref1=useRef(null)
@@ -42,10 +43,28 @@ const VerifyOtp = () => {
          otpArray[location](event.target.value);
          
     };
-    const submitHandler=(event)=>{
+    const submitHandler= async (event)=>{
             event.preventDefault();
-            navigate('/update/password')
-            console.log(otp1,otp2,otp3,otp4,otp5,otp6)
+            const finalOtp=otp1+otp2+otp3+otp4+otp5+otp6;
+            // console.log(finalOtp)
+            try{
+                const response = await fetch(api().otpVerify,{
+                    method: 'POST',
+                    body:JSON.stringify({otp:finalOtp}),
+                    headers:{'Content-type': 'application/json'}
+                })
+                const result = await response.json()
+                if(!response.ok){
+                    throw new Error(result?.message)
+                }
+                if(result?.status){
+                    console.log(result)
+                }
+            }catch(error){
+                toast.error(error.message)
+            }
+            // navigate('/update/password')
+            
              
         }
   return (

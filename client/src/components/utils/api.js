@@ -9,6 +9,7 @@ const api =()=>{
         registerUser: `${baseUrl}user/register`,
         loginUser: `${baseUrl}user/login`,
         forgetPassword: `${baseUrl}user/forget/password`,
+        otpVerify: `${baseUrl}user/otp/verify`,
     }
     return list;
 }
