@@ -7,6 +7,7 @@ import Timer from './Timer';
 import { useNavigate } from 'react-router-dom';
 import toast from 'react-hot-toast';
 import api from '../utils/api';
+import LoadingButton from '../ui/LoadingButton';
 const VerifyOtp = () => {
     const navigate = useNavigate()
     const ref1=useRef(null)
@@ -18,7 +19,7 @@ const VerifyOtp = () => {
 
     const inputRef=[ref1,ref2,ref3,ref4,ref5,ref6]
     
-
+    const [loading, setLoading] = useState(false)
     const [otp1, setOtp1]= useState('')
     const [otp2, setOtp2]= useState('')
     const [otp3, setOtp3]= useState('')
@@ -48,25 +49,53 @@ const VerifyOtp = () => {
             const finalOtp=otp1+otp2+otp3+otp4+otp5+otp6;
             // console.log(finalOtp)
             try{
+                setLoading(true)
                 const response = await fetch(api().otpVerify,{
                     method: 'POST',
                     body:JSON.stringify({otp:finalOtp}),
                     headers:{'Content-type': 'application/json'}
                 })
                 const result = await response.json()
+                setLoading(false)
                 if(!response.ok){
                     throw new Error(result?.message)
                 }
                 if(result?.status){
-                    console.log(result)
+                    toast.success(result?.message)
+                    
                 }
             }catch(error){
                 toast.error(error.message)
             }
-            // navigate('/update/password')
-            
-             
+             navigate('/update/password')   
         }
+
+useEffect(()=>{
+    const getTime = async()=>{
+
+        try{
+            const response = await fetch(api().getOtpTime,{
+                method: 'POST',
+                body:JSON.stringify({token:localStorage.getItem('passToken')}),
+                headers:{'Content-type': 'application/json'},
+            })
+            const result = await response.json()
+
+            if(!response.ok){
+                throw new Error(result?.message)  
+            }
+            if(result.status){
+                console.log(result);
+            }
+            
+        }catch(error){
+            toast.error(error.message)
+        }
+    }
+  getTime();
+},[])
+
+
   return (
     <div className='auth_main'>
         <form onSubmit={submitHandler}>
@@ -101,7 +130,9 @@ const VerifyOtp = () => {
                 </div>
 
                 <div className='auth_action'>
-                    <Button>Verify</Button>
+                    <Button>
+                        <LoadingButton loading={loading} title={'Verify'}/>
+                    </Button>
                 </div>
                 <div className='auth_timer'>
                     <Timer/>
